@@ -12,4 +12,5 @@ public interface ProductService {
     void deleteProduct(String id);
     List<ProductListResponse> getAllProducts();
     ProductResponse getProductById(String id);
+    void updateProductRating(String productId, double rating);
 }

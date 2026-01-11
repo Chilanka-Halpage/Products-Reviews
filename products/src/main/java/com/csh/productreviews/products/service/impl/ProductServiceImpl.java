@@ -5,7 +5,9 @@ import com.csh.productreviews.products.dto.ProductRequest;
 import com.csh.productreviews.products.dto.ProductResponse;
 import com.csh.productreviews.products.exception.NotFoundException;
 import com.csh.productreviews.products.model.Product;
+import com.csh.productreviews.products.model.Review;
 import com.csh.productreviews.products.repository.ProductRepository;
+import com.csh.productreviews.products.repository.ReviewRepository;
 import com.csh.productreviews.products.service.ProductService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -17,6 +19,7 @@ import java.util.stream.Collectors;
 @Service
 public class ProductServiceImpl implements ProductService {
     private final ProductRepository productRepository;
+    private final ReviewRepository reviewRepository;
 
     @Override
     public void createProduct(ProductRequest productRequest) {
@@ -60,13 +63,25 @@ public class ProductServiceImpl implements ProductService {
     public ProductResponse getProductById(String id) {
         Product product = productRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("Product Not Found with Id : " + id));
+        List<Review> reviews = reviewRepository.findByProductId(product.getId());
         return ProductResponse.builder()
                 .id(product.getId())
                 .name(product.getName())
                 .description(product.getDescription())
                 .price(product.getPrice())
                 .rating(product.getRating())
-                .reviewList(List.of())
+                .reviewList(reviews)
                 .build();
     }
+
+    @Override
+    public void updateProductRating(String productId, double rating) {
+        Product product = productRepository.findById(productId).orElseThrow(() -> new NotFoundException("Product Not Found with Id : " + productId));
+        int ratingCount = product.getRatingCount();
+        rating = (product.getRating() * ratingCount + rating) / ++ratingCount;
+        product.setRating(rating);
+        product.setRatingCount(ratingCount);
+        productRepository.save(product);
+    }
+
 }

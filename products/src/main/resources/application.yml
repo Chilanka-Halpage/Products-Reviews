@@ -1,9 +1,15 @@
 spring:
   application:
     name: products
+  rabbitmq:
+    username: csh_rabbit
+    password: ${PASSWORD}
   mongodb:
-    uri: mongodb+srv://root:csh123@chilankash.wpeuqrw.mongodb.net/?appName=ChilankaSH
+    uri: mongodb+srv://${DB_USER}:${DB_PASSWORD}@chilankash.wpeuqrw.mongodb.net/?appName=ChilankaSH
     database: product-reviews
+rabbitmq:
+  queue:
+    name: product.reviews.queue
 springdoc:
   swagger-ui:
     path: /swagger-ui.html
