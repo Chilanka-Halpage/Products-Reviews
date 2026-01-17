@@ -1,0 +1,21 @@
+spring:
+  application:
+    name: reviews
+  rabbitmq:
+    username: csh_rabbit
+    password: ${PASSWORD}
+server:
+  port: 8081
+rabbitmq:
+  queue:
+    name: product.reviews.queue
+  exchange:
+    name: product-reviews.exchange
+  routing:
+    key: product.reviews.created
+springdoc:
+  swagger-ui:
+    path: /swagger-ui.html
+  api-docs:
+    path: /api-docs
+
